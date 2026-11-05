@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diario Refuerzo Pedagógico v1.00 | CEIP Manuel de Falla</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e293b;
+            --primary-gradient: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            --secondary: #0284c7;
+            --secondary-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            --secondary-hover: #0369a1;
+            --secondary-glow: rgba(2, 132, 199, 0.35);
+            --accent: #ef4444;
+            --accent-gradient: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            --success: #10b981;
+            --success-gradient: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            --warning: #f59e0b;
+            --warning-gradient: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            --bg-light: #f1f5f9;
+            --border-color: #cbd5e1;
+            --card-radius: 16px;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --card-border: 1px solid rgba(226, 232, 240, 0.9);
+        }
+
+        /* Color Themes Coherentes */
+        body.theme-purple { 
+            --primary: #3b0764; 
+            --primary-gradient: linear-gradient(135deg, #4c1d95 0%, #2e1065 100%);
+            --secondary: #7c3aed;
+            --secondary-gradient: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+            --secondary-hover: #6d28d9;
+            --secondary-glow: rgba(124, 58, 237, 0.35);
+        }
+        body.theme-green { 
+            --primary: #064e3b; 
+            --primary-gradient: linear-gradient(135deg, #065f46 0%, #022c22 100%);
+            --secondary: #059669;
+            --secondary-gradient: linear-gradient(135deg, #34d399 0%, #059669 100%);
+            --secondary-hover: #047857;
+            --secondary-glow: rgba(5, 150, 105, 0.35);
+        }
+        body.theme-red { 
+            --primary: #7f1d1d; 
+            --primary-gradient: linear-gradient(135deg, #991b1b 0%, #450a0a 100%);
+            --secondary: #dc2626;
+            --secondary-gradient: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            --secondary-hover: #b91c1c;
+            --secondary-glow: rgba(220, 38, 38, 0.35);
+        }
+        body.theme-orange { 
+            --primary: #7c2d12; 
+            --primary-gradient: linear-gradient(135deg, #9a3412 0%, #431407 100%);
+            --secondary: #ea580c;
+            --secondary-gradient: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+            --secondary-hover: #c2410c;
+            --secondary-glow: rgba(234, 88, 12, 0.35);
+        }
+        body.theme-blue { 
+            --primary: #0c4a6e; 
+            --primary-gradient: linear-gradient(135deg, #075985 0%, #082f49 100%);
+            --secondary: #0284c7;
+            --secondary-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+            --secondary-hover: #0369a1;
+            --secondary-glow: rgba(2, 132, 199, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: #334155;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Splash / Welcome Dashboard Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 50%, #7dd3fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .splash-card {
+            background: white;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 680px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            padding: 40px 35px 30px 35px;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Top Header Palette Bar */
+        .top-palette-bar {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 30px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        .theme-dots-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .theme-dots-container.open {
+            max-width: 250px;
+            opacity: 1;
+        }
+
+        .color-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .color-dot:hover { transform: scale(1.2); }
+        .dot-purple { background: linear-gradient(135deg, #7b1fa2, #4a148c); }
+        .dot-green { background: linear-gradient(135deg, #2e7d32, #1b5e20); }
+        .dot-red { background: linear-gradient(135deg, #c62828, #b71c1c); }
+        .dot-orange { background: linear-gradient(135deg, #ef6c00, #e65100); }
+        .dot-blue { background: linear-gradient(135deg, #1565c0, #0d47a1); }
+
+        .settings-cog-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #64748b;
+            font-size: 1.2rem;
+            transition: transform 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-cog-btn:hover {
+            color: var(--secondary);
+            transform: rotate(45deg);
+        }
+
+        .splash-header-tag {
+            color: var(--secondary);
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .splash-title {
+            color: var(--primary);
+            font-size: 2.1rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .splash-version {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .splash-subtitle {
+            color: #475569;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .splash-course {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .splash-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .splash-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+        }
+
+        .splash-btn-primary { 
+            background: var(--secondary-gradient); 
+            color: white; 
+            box-shadow: 0 6px 20px var(--secondary-glow), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .splash-btn-primary:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 25px var(--secondary-glow);
+        }
+
+        .splash-btn-danger { 
+            background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); 
+            color: white; 
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .splash-btn-danger:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.45);
+        }
+
+        .splash-btn-secondary { 
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); 
+            color: white; 
+            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .splash-btn-secondary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 20px rgba(100, 116, 139, 0.4);
+        }
+
+        .splash-row { display: flex; gap: 14px; }
+        .splash-row .splash-btn { flex: 1; }
+
+        .splash-divider {
+            border-top: 2px dashed #cbd5e1;
+            margin: 25px 0 20px 0;
+            position: relative;
+        }
+
+        .splash-divider span {
+            position: absolute;
+            top: -12px; left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 0 12px;
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .splash-footer {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 4px 0 25px rgba(0, 0, 0, 0.15);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 1.15rem;
+            margin-bottom: 30px;
+            padding: 0 15px;
+            color: #f8fafc;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links { list-style: none; }
+
+        .nav-links li a {
+            display: flex;
+            align-items: center;
+            padding: 16px 25px;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-links li a:hover, .nav-links li a.active {
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border-left: 5px solid var(--secondary);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links li a i { margin-right: 15px; width: 20px; font-size: 1.1rem; }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 250px;
+            flex: 1;
+            padding: 35px;
+            max-width: calc(100% - 250px);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: white;
+            padding: 22px 28px;
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            border: var(--card-border);
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--card-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            border: var(--card-border);
+        }
+
+        /* Form Components & Buttons */
+        .btn {
+            padding: 11px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            transition: all 0.25s ease;
+            font-size: 0.92rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary { 
+            background: var(--secondary-gradient); 
+            color: white; 
+            box-shadow: 0 4px 14px var(--secondary-glow);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-primary:hover { box-shadow: 0 6px 18px var(--secondary-glow); }
+
+        .btn-success { 
+            background: var(--success-gradient); 
+            color: white; 
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-success:hover { box-shadow: 0 6px 18px rgba(16, 185, 129, 0.45); }
+
+        .btn-danger { 
+            background: var(--accent-gradient); 
+            color: white; 
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-danger:hover { box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45); }
+
+        .btn-warning { 
+            background: var(--warning-gradient); 
+            color: white; 
+            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-warning:hover { box-shadow: 0 6px 18px rgba(245, 158, 11, 0.45); }
+
+        .form-group { margin-bottom: 18px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            color: #334155;
+            font-size: 0.92rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background-color: white;
+            box-shadow: 0 0 0 4px var(--secondary-glow);
+        }
+
+        .subject-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .subject-row .checkbox-label { min-width: 140px; }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 6px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #475569;
+        }
+
+        .checkbox-label input[type="checkbox"],
+        .checkbox-label input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--secondary);
+        }
+
+        .obs-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .obs-tag-btn {
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.83rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .obs-tag-btn:hover {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+            box-shadow: 0 3px 8px var(--secondary-glow);
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+
+        /* Tables Visual Enhancement */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* FILA SEPARADORA DE DÍA Y SEMANAS EN EL DIARIO */
+        .day-separator-row td {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1rem;
+            padding: 14px 20px;
+            letter-spacing: 0.5px;
+            border-top: 2px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+        }
+
+        /* Colores alternables según la semana */
+        .day-sep-week-0 td { background: #e0f2fe; color: #0369a1; } /* Azul */
+        .day-sep-week-1 td { background: #dcfce7; color: #15803d; } /* Verde */
+        .day-sep-week-2 td { background: #f3e8ff; color: #6b21a8; } /* Púrpura */
+        .day-sep-week-3 td { background: #ffedd5; color: #c2410c; } /* Naranja */
+
+        .badge-container-stacked {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: flex-start;
+        }
+
+        .slot-subtext {
+            display: block;
+            font-size: 0.78rem;
+            color: #64748b;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* Ajustes específicos para evitar saltos de línea de la fecha y alinear botones */
+        .date-cell {
+            white-space: nowrap;
+        }
+
+        .action-buttons-cell {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        /* Schedule Grid Visual Realce */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 110px repeat(5, 1fr);
+            gap: 6px;
+            background: #cbd5e1;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .schedule-header, .schedule-cell {
+            background: white;
+            padding: 10px;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .schedule-header {
+            background: var(--primary-gradient);
+            color: white;
+            font-weight: 700;
+            min-height: 45px;
+        }
+
+        .schedule-cell {
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .schedule-cell:hover { 
+            background-color: #f0f9ff; 
+            box-shadow: inset 0 0 0 2px var(--secondary);
+        }
+
+        .schedule-cell.recreo-cell {
+            background-color: #f8fafc;
+            cursor: default;
+        }
+
+        .schedule-tag {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            color: #0284c7;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-top: 4px;
+            width: 90%;
+            word-break: break-word;
+            box-shadow: 0 2px 5px rgba(2, 132, 199, 0.15);
+            border: 1px solid rgba(2, 132, 199, 0.2);
+        }
+
+        .schedule-tag.recreo {
+            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+            color: #c2410c;
+            border-color: rgba(194, 65, 12, 0.2);
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .badge-lengua { background-color: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
+        .badge-mates { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .badge-pt { background-color: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+        .badge-al { background-color: #f3e8ff; color: #6b21a8; border: 1px solid #d8b4fe; }
+
+        /* Estilos visuales potentes para los botones de Generación Informes */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+            padding: 20px 10px;
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .report-card-btn {
+            background: white;
+            border-radius: 24px;
+            padding: 35px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .report-card-btn:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.18);
+            border-color: var(--secondary);
+        }
+
+        .report-icon-box {
+            width: 85px;
+            height: 85px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.3rem;
+            margin-bottom: 22px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .icon-blue { background: linear-gradient(135deg, #60a5fa 0%, #1d4ed8 100%); color: white; }
+        .icon-purple { background: linear-gradient(135deg, #c084fc 0%, #6d28d9 100%); color: white; }
+        .icon-indigo { background: linear-gradient(135deg, #818cf8 0%, #4338ca 100%); color: white; }
+        .icon-cyan { background: linear-gradient(135deg, #38bdf8 0%, #0369a1 100%); color: white; }
+        .icon-emerald { background: linear-gradient(135deg, #34d399 0%, #047857 100%); color: white; }
+        .icon-amber { background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%); color: white; }
+
+        .report-card-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        /* Modals Visual Realce */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .modal-content h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .subject-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .subject-btn {
+            padding: 12px;
+            border: 1.5px solid #ea580c;
+            background: #fff7ed;
+            color: #c2410c;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .subject-btn:hover { background: #ea580c; color: white; transform: translateY(-2px); }
+
+        .subject-btn.mates {
+            border-color: #16a34a;
+            background: #f0fdf4;
+            color: #15803d;
+        }
+        .subject-btn.mates:hover { background: #16a34a; color: white; }
+
+        .subject-btn.lectiva {
+            border-color: #0284c7;
+            background: #f0f9ff;
+            color: #0369a1;
+        }
+        .subject-btn.lectiva:hover { background: #0284c7; color: white; }
+
+        .course-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .course-btn {
+            padding: 10px;
+            border: 1.5px solid var(--secondary);
+            background: #f0f9ff;
+            color: var(--secondary);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .course-btn:hover { background: var(--secondary); color: white; transform: translateY(-2px); }
+
+        /* Print Media Styles */
+        @media print {
+            .sidebar, .btn, .no-print, .section-header { display: none !important; }
+            .main-content { margin-left: 0 !important; max-width: 100% !important; padding: 0 !important; }
+            .card { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
+            body { background: white !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SPLASH / WELCOME DASHBOARD SCREEN -->
+    <div id="splash-screen">
+        <div class="splash-card">
+            <!-- Palette Bar with Settings Cog -->
+            <div class="top-palette-bar">
+                <div class="theme-dots-container" id="theme-dots">
+                    <div class="color-dot dot-blue" onclick="setTheme('blue')" title="Tema Azul"></div>
+                    <div class="color-dot dot-purple" onclick="setTheme('purple')" title="Tema Púrpura"></div>
+                    <div class="color-dot dot-green" onclick="setTheme('green')" title="Tema Verde"></div>
+                    <div class="color-dot dot-red" onclick="setTheme('red')" title="Tema Rojo"></div>
+                    <div class="color-dot dot-orange" onclick="setTheme('orange')" title="Tema Naranja"></div>
+                </div>
+                <button class="settings-cog-btn" onclick="toggleThemeDots()" title="Cambiar Tema de Color">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+
+            <div class="splash-header-tag">CEIP MANUEL DE FALLA</div>
+            <h1 class="splash-title">DIARIO REFUERZO PEDAGÓGICO <span class="splash-version">v1.00</span></h1>
+            <div class="splash-subtitle">Gestión Integral de Sesiones de Refuerzo</div>
+            <div class="splash-course">Curso escolar 2026/2027</div>
+
+            <div class="splash-menu">
+                <button class="splash-btn splash-btn-primary" onclick="navigateToApp('alumnos')">
+                    <i class="fas fa-users"></i> GESTIÓN DE ALUMNOS
+                </button>
+                <div class="splash-row">
+                    <button class="splash-btn splash-btn-primary" onclick="navigateToApp('horario')">
+                        <i class="fas fa-calendar-alt"></i> HORARIO
+                    </button>
+                    <button class="splash-btn splash-btn-primary" onclick="navigateToApp('diario')">
+                        <i class="fas fa-book"></i> SESIONES DE REFUERZO
+                    </button>
+                </div>
+                <button class="splash-btn splash-btn-primary" onclick="navigateToApp('informes')">
+                    <i class="fas fa-file-invoice"></i> GENERACIÓN INFORMES
+                </button>
+            </div>
+
+            <button class="splash-btn splash-btn-danger" onclick="clearFullDatabase()">
+                <i class="fas fa-trash-alt"></i> BORRAR TODA LA BASE DE DATOS
+            </button>
+
+            <div class="splash-divider">
+                <span>COPIA DE SEGURIDAD</span>
+            </div>
+
+            <div class="splash-row">
+                <button class="splash-btn splash-btn-secondary" onclick="triggerImportJSON()">
+                    <i class="fas fa-file-import"></i> Importar
+                </button>
+                <button class="splash-btn splash-btn-secondary" onclick="exportJSON()">
+                    <i class="fas fa-file-export"></i> Exportar
+                </button>
+            </div>
+            <input type="file" id="import-file-input" style="display:none" accept=".json" onchange="importJSON(event)">
+
+            <div class="splash-footer">
+                Programado por Carlos Garrido
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2><i class="fas fa-graduation-cap"></i> Refuerzo 26/27</h2>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showSplashScreen(event)"><i class="fas fa-home"></i> Inicio / Menú</a></li>
+            <li><a href="#" id="nav-alumnos" class="active" onclick="switchTab('alumnos', event)"><i class="fas fa-users"></i> Alumnado</a></li>
+            <li><a href="#" id="nav-horario" onclick="switchTab('horario', event)"><i class="fas fa-calendar-alt"></i> Horario</a></li>
+            <li><a href="#" id="nav-diario" onclick="switchTab('diario', event)"><i class="fas fa-book"></i> Diario de Sesiones</a></li>
+            <li><a href="#" id="nav-informes" onclick="switchTab('informes', event)"><i class="fas fa-file-invoice"></i> Generación Informes</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+        <!-- TAB: ALUMNADO -->
+        <div id="tab-alumnos" class="tab-content active">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Listado de Alumnado de Refuerzo</h2>
+                <button class="btn btn-primary" onclick="openStudentModal()"><i class="fas fa-plus"></i> Añadir Alumno/a</button>
+            </div>
+            
+            <div class="card">
+                <div class="grid-2">
+                    <input type="text" id="search-student" class="form-control" placeholder="Buscar por nombre..." onkeyup="filterStudents()">
+                    <select id="filter-course" class="form-control" onchange="filterStudents()">
+                        <option value="">Todos los cursos</option>
+                        <option value="1º A">1º A</option><option value="1º B">1º B</option>
+                        <option value="2º A">2º A</option><option value="2º B">2º B</option>
+                        <option value="3º A">3º A</option><option value="3º B">3º B</option>
+                        <option value="4º A">4º A</option><option value="4º B">4º B</option>
+                        <option value="5º A">5º A</option><option value="5º B">5º B</option>
+                        <option value="6º A">6º A</option><option value="6º B">6º B</option>
+                    </select>
+                </div>
+                <table id="students-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre y Apellidos</th>
+                            <th>Curso</th>
+                            <th>Refuerzo en (Motivo)</th>
+                            <th>Atendido por</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: HORARIO -->
+        <div id="tab-horario" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-calendar-alt"></i> Horario Semanal de Refuerzo</h2>
+                <button class="btn btn-warning" onclick="resetEmptySchedule()"><i class="fas fa-sync"></i> Restablecer Horario Vacío</button>
+            </div>
+            
+            <div class="card">
+                <div class="schedule-grid" id="schedule-container">
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: DIARIO DE SESIONES -->
+        <div id="tab-diario" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-book"></i> Registro Diario de Refuerzo Pedagógico</h2>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-success" onclick="filterTodaySessions()"><i class="fas fa-calendar-day"></i> Registro de HOY</button>
+                    <button class="btn btn-warning" onclick="openDayModal()"><i class="fas fa-calendar-plus"></i> Añadir Día</button>
+                    <button class="btn btn-primary" onclick="openSessionModal()"><i class="fas fa-plus"></i> Registrar Sesión</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div id="session-filter-indicator" style="display:none; margin-bottom: 15px; padding: 10px 15px; background: #e0f2fe; border-left: 4px solid #0284c7; border-radius: 6px; font-weight: 600; color: #0369a1; justify-content: space-between; align-items: center;">
+                    <span><i class="fas fa-filter"></i> Mostrando únicamente los registros del día de hoy.</span>
+                    <button class="btn btn-warning" style="padding: 4px 10px; font-size: 0.8rem;" onclick="clearSessionFilter()">Ver Todo</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Alumno/a</th>
+                            <th>Curso</th>
+                            <th>Área</th>
+                            <th>Aprendizajes Trabajados</th>
+                            <th>Actitud</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessions-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB: GENERACIÓN INFORMES (PANTALLA VISUAL DE BOTONES) -->
+        <div id="tab-informes" class="tab-content">
+            <div class="section-header">
+                <h2><i class="fas fa-file-invoice"></i> Generación Informes</h2>
+            </div>
+
+            <div class="reports-grid">
+                <!-- Botón: POR DÍA -->
+                <div class="report-card-btn" onclick="onReportButtonClick('dia')">
+                    <div class="report-icon-box icon-blue">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="report-card-title">POR DÍA</div>
+                </div>
+
+                <!-- Botón: POR CURSO -->
+                <div class="report-card-btn" onclick="onReportButtonClick('curso')">
+                    <div class="report-icon-box icon-purple">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="report-card-title">POR CURSO</div>
+                </div>
+
+                <!-- Botón: POR ALUMNO -->
+                <div class="report-card-btn" onclick="onReportButtonClick('alumno')">
+                    <div class="report-icon-box icon-indigo">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <div class="report-card-title">POR ALUMNO</div>
+                </div>
+
+                <!-- Botón: INFORME SUSTITUCIÓN -->
+                <div class="report-card-btn" onclick="onReportButtonClick('sustitucion')">
+                    <div class="report-icon-box icon-cyan">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="report-card-title">INFORME SUSTITUCIÓN</div>
+                </div>
+
+                <!-- Botón: POR TRIMESTRE -->
+                <div class="report-card-btn" onclick="onReportButtonClick('trimestre')">
+                    <div class="report-icon-box icon-emerald">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="report-card-title">POR TRIMESTRE</div>
+                </div>
+
+                <!-- Botón: INFORME PARA TUTOR -->
+                <div class="report-card-btn" onclick="onReportButtonClick('tutor')">
+                    <div class="report-icon-box icon-amber">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="report-card-title">INFORME PARA TUTOR</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: AÑADIR DÍA (SEPARADOR) -->
+    <div id="day-modal" class="modal">
+        <div class="modal-content" style="max-width: 450px;">
+            <h3>Añadir Separador de Día</h3>
+            <p style="color:#64748b; font-size: 0.9rem; margin-bottom: 15px;">Selecciona la fecha para insertar el encabezado de jornada en el Diario.</p>
+            <div class="form-group">
+                <label>Fecha del día:</label>
+                <input type="date" id="day-separator-date" class="form-control" required>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn btn-danger" onclick="closeModal('day-modal')">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="saveDaySeparator()"><i class="fas fa-plus-circle"></i> Insertar Día</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EDICIÓN DE HORARIO -->
+    <div id="schedule-modal" class="modal">
+        <div class="modal-content">
+            <h3>Asignar / Editar Franja Horaria</h3>
+            <p id="schedule-modal-info" style="color: #64748b; margin-bottom: 18px; font-size: 0.95rem; font-weight: 600;"></p>
+
+            <div class="form-group">
+                <label>1. Selecciona Materia / Tipo de Sesión:</label>
+                <div class="subject-btn-grid">
+                    <div class="subject-btn" onclick="setSubjectValue('Lengua')"><i class="fas fa-book"></i> Lengua</div>
+                    <div class="subject-btn mates" onclick="setSubjectValue('Matemáticas')"><i class="fas fa-calculator"></i> Matemáticas</div>
+                    <div class="subject-btn lectiva" onclick="setSubjectValue('Clase Lectiva')"><i class="fas fa-chalkboard-teacher"></i> Clase Lectiva</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>2. Selección rápida de curso:</label>
+                <div class="course-btn-grid">
+                    <div class="course-btn" onclick="setCourseValue('1º A')">1º A</div>
+                    <div class="course-btn" onclick="setCourseValue('1º B')">1º B</div>
+                    <div class="course-btn" onclick="setCourseValue('2º A')">2º A</div>
+                    <div class="course-btn" onclick="setCourseValue('2º B')">2º B</div>
+                    <div class="course-btn" onclick="setCourseValue('3º A')">3º A</div>
+                    <div class="course-btn" onclick="setCourseValue('3º B')">3º B</div>
+                    <div class="course-btn" onclick="setCourseValue('4º A')">4º A</div>
+                    <div class="course-btn" onclick="setCourseValue('4º B')">4º B</div>
+                    <div class="course-btn" onclick="setCourseValue('5º A')">5º A</div>
+                    <div class="course-btn" onclick="setCourseValue('5º B')">5º B</div>
+                    <div class="course-btn" onclick="setCourseValue('6º A')">6º A</div>
+                    <div class="course-btn" onclick="setCourseValue('6º B')">6º B</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Texto que aparecerá en la celda del horario:</label>
+                <input type="text" id="schedule-input-val" class="form-control" placeholder="Ej: Lengua - 1º A">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 25px;">
+                <button type="button" class="btn btn-danger" onclick="clearScheduleCell()"><i class="fas fa-trash"></i> Vaciar Casilla</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-warning" onclick="closeModal('schedule-modal')">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="saveScheduleCell()"><i class="fas fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ALUMNO -->
+    <div id="student-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-student-title">Añadir Alumno/a</h3>
+            <br>
+            <form id="student-form" onsubmit="saveStudent(event)">
+                <input type="hidden" id="student-id">
+                
+                <div class="form-group">
+                    <label>Nombre y Apellidos:</label>
+                    <input type="text" id="student-name" class="form-control" required placeholder="Nombre y apellidos del alumno/a">
+                </div>
+
+                <div class="form-group">
+                    <label>Curso:</label>
+                    <select id="student-course" class="form-control" required>
+                        <option value="1º A">1º A</option><option value="1º B">1º B</option>
+                        <option value="2º A">2º A</option><option value="2º B">2º B</option>
+                        <option value="3º A">3º A</option><option value="3º B">3º B</option>
+                        <option value="4º A">4º A</option><option value="4º B">4º B</option>
+                        <option value="5º A">5º A</option><option value="5º B">5º B</option>
+                        <option value="6º A">6º A</option><option value="6º B">6º B</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Refuerzo en:</label>
+                    
+                    <div class="subject-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="student-refuerzo-lengua"> Lengua
+                        </label>
+                        <select id="student-motivo-lengua" class="form-control">
+                            <option value="">-- Seleccionar Motivo --</option>
+                            <option value="Área suspensa">Área suspensa</option>
+                            <option value="No promociona (Repetidor)">No promociona (Repetidor)</option>
+                            <option value="DIA en evaluación inicial">DIA en evaluación inicial</option>
+                            <option value="NEAE">NEAE</option>
+                        </select>
+                    </div>
+
+                    <div class="subject-row">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="student-refuerzo-mates"> Matemáticas
+                        </label>
+                        <select id="student-motivo-mates" class="form-control">
+                            <option value="">-- Seleccionar Motivo --</option>
+                            <option value="Área suspensa">Área suspensa</option>
+                            <option value="No promociona (Repetidor)">No promociona (Repetidor)</option>
+                            <option value="DIA en evaluación inicial">DIA en evaluación inicial</option>
+                            <option value="NEAE">NEAE</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Atendido en horario de refuerzo:</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="student-atendido-pt"> PT
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="student-atendido-al"> AL
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Observaciones:</label>
+                    <textarea id="student-obs" class="form-control" rows="3" placeholder="Observaciones o notas relevantes..."></textarea>
+                </div>
+
+                <div style="text-align: right; margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('student-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTRO DE SESIÓN -->
+    <div id="session-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-session-title">Registrar Sesión de Refuerzo</h3>
+            <br>
+            <form id="session-form" onsubmit="saveSession(event)">
+                <input type="hidden" id="session-id">
+
+                <div class="form-group">
+                    <label>Fecha:</label>
+                    <input type="date" id="session-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Alumno/a:</label>
+                    <select id="session-student-id" class="form-control" required></select>
+                </div>
+
+                <div class="grid-2" style="align-items: flex-end;">
+                    <div class="form-group">
+                        <label>Área:</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="radio" id="session-area-lengua" name="session-area-radio" value="Lengua" onclick="onAreaChange('Lengua')" required> Lengua
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="radio" id="session-area-mates" name="session-area-radio" value="Matemáticas" onclick="onAreaChange('Matemáticas')"> Matemáticas
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tramo horario:</label>
+                        <select id="session-time-slot" class="form-control">
+                            <option value="">-- Seleccionar --</option>
+                            <option value="9:00–10:00">9:00–10:00</option>
+                            <option value="10:00–11:00">10:00–11:00</option>
+                            <option value="11:30–12:00">11:30–12:00</option>
+                            <option value="12:00–13:00">12:00–13:00</option>
+                            <option value="13:00–14:00">13:00–14:00</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Aprendizajes trabajados:</label>
+                    <select id="session-learning-select" class="form-control" onchange="onLearningChange()" required>
+                        <option value="">- Selec -</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="session-other-group" style="display:none;">
+                    <label>Otros (especificar):</label>
+                    <input type="text" id="session-other-input" class="form-control" placeholder="Escribe el aprendizaje o contenido...">
+                </div>
+
+                <div class="form-group">
+                    <label>Actitud:</label>
+                    <select id="session-attitude" class="form-control">
+                        <option value="">-- Selecciona --</option>
+                        <option value="Se esfuerza en aprender">Se esfuerza en aprender</option>
+                        <option value="No avanza en su aprendizaje">No avanza en su aprendizaje</option>
+                        <option value="Avanza en su aprendizaje">Avanza en su aprendizaje</option>
+                        <option value="No muestra interés por su aprendizaje">No muestra interés por su aprendizaje</option>
+                        <option value="Avanza en su aprendizaje pero muy lentamente">Avanza en su aprendizaje pero muy lentamente</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Observaciones:</label>
+                    <textarea id="session-obs" class="form-control" rows="3" placeholder="Detalles de la sesión..."></textarea>
+                    <div class="obs-tags">
+                        <button type="button" class="obs-tag-btn" onclick="appendObsTag('Se distrae con facilidad.')">Se distrae</button>
+                        <button type="button" class="obs-tag-btn" onclick="appendObsTag('Trabaja con autonomía.')">Autonomía</button>
+                        <button type="button" class="obs-tag-btn" onclick="appendObsTag('No trae el material.')">Sin material</button>
+                        <button type="button" class="obs-tag-btn" onclick="appendObsTag('Necesita ayuda constante.')">Necesita ayuda</button>
+                        <button type="button" class="obs-tag-btn" onclick="appendObsTag('Buena actitud.')">Buena actitud</button>
+                        <button type="button" class="obs-tag-btn" onclick="appendObsTag('No termina la tarea.')">No termina</button>
+                    </div>
+                </div>
+
+                <div style="text-align: right; margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-danger" onclick="closeModal('session-modal')">Cancelar</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS LOGIC & DATA -->
+    <script>
+        const emptySchedule = {
+            "9:00–10:00": {},
+            "10:00–11:00": {},
+            "11:00–11:30": { "Lunes": "RECREO", "Martes": "RECREO", "Miércoles": "RECREO", "Jueves": "RECREO", "Viernes": "RECREO" },
+            "11:30–12:00": {},
+            "12:00–13:00": {},
+            "13:00–14:00": {}
+        };
+
+        const opcionesLengua = [
+            "Lectura",
+            "Velocidad lectora",
+            "Comprensión lectora",
+            "Expresión escrita / trazo",
+            "Ortografía",
+            "Gramática y vocabulario",
+            "Conciencia fonológica",
+            "Expresión oral",
+            "Otros"
+        ];
+
+        const opcionesMates = [
+            "Numeración",
+            "Cálculo mental",
+            "Operaciones básicas (Sum/Res)",
+            "Operaciones complejas (Mul/Div)",
+            "Resolución de problemas",
+            "Geometría",
+            "Magnitudes y medidas",
+            "Razonamiento lógico",
+            "Otros"
+        ];
+
+        let students = JSON.parse(localStorage.getItem('refuerzo_students')) || [];
+        let schedule = JSON.parse(localStorage.getItem('refuerzo_schedule')) || emptySchedule;
+        let sessions = JSON.parse(localStorage.getItem('refuerzo_sessions')) || [];
+        let daySeparators = JSON.parse(localStorage.getItem('refuerzo_day_separators')) || [];
+        let currentTheme = localStorage.getItem('refuerzo_theme') || '';
+        let isTodayFilterActive = false;
+
+        let currentEditingSlot = null;
+        let currentEditingDay = null;
+        let selectedSubject = '';
+
+        const timeslots = ["9:00–10:00", "10:00–11:00", "11:00–11:30", "11:30–12:00", "12:00–13:00", "13:00–14:00"];
+        const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (currentTheme) {
+                document.body.className = currentTheme;
+            }
+            renderStudents();
+            renderSchedule();
+            renderSessions();
+            populateStudentSelects();
+            document.getElementById('session-date').valueAsDate = new Date();
+        });
+
+        function saveData() {
+            localStorage.setItem('refuerzo_students', JSON.stringify(students));
+            localStorage.setItem('refuerzo_schedule', JSON.stringify(schedule));
+            localStorage.setItem('refuerzo_sessions', JSON.stringify(sessions));
+            localStorage.setItem('refuerzo_day_separators', JSON.stringify(daySeparators));
+        }
+
+        /* --- THEME TOGGLE & PALETTE --- */
+        function toggleThemeDots() {
+            const container = document.getElementById('theme-dots');
+            container.classList.toggle('open');
+        }
+
+        function setTheme(themeName) {
+            document.body.className = '';
+            if (themeName !== 'default') {
+                const themeClass = `theme-${themeName}`;
+                document.body.classList.add(themeClass);
+                localStorage.setItem('refuerzo_theme', themeClass);
+            } else {
+                localStorage.removeItem('refuerzo_theme');
+            }
+        }
+
+        /* --- SPLASH SCREEN NAVIGATION --- */
+        function navigateToApp(tabId) {
+            document.getElementById('splash-screen').style.display = 'none';
+            switchTab(tabId);
+        }
+
+        function showSplashScreen(e) {
+            if(e) e.preventDefault();
+            document.getElementById('splash-screen').style.display = 'flex';
+        }
+
+        function switchTab(tabId, event) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            const navBtn = document.getElementById(`nav-${tabId}`);
+            if (navBtn) navBtn.classList.add('active');
+        }
+
+        /* --- ACCIÓN DE BOTONES DE GENERACIÓN INFORMES --- */
+        function onReportButtonClick(reportType) {
+            console.log("Seleccionado tipo de informe:", reportType);
+        }
+
+        /* --- DATABASE MANAGEMENT --- */
+        function clearFullDatabase() {
+            if (confirm('⚠️ ¿Estás seguro/a de que deseas BORRAR TODA LA BASE DE DATOS? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('refuerzo_students');
+                localStorage.removeItem('refuerzo_schedule');
+                localStorage.removeItem('refuerzo_sessions');
+                localStorage.removeItem('refuerzo_day_separators');
+                students = [];
+                schedule = JSON.parse(JSON.stringify(emptySchedule));
+                sessions = [];
+                daySeparators = [];
+                saveData();
+                renderStudents();
+                renderSchedule();
+                renderSessions();
+                populateStudentSelects();
+                alert('La base de datos se ha restablecido por completo.');
+            }
+        }
+
+        function exportJSON() {
+            const dataObj = { students, schedule, sessions, daySeparators, theme: localStorage.getItem('refuerzo_theme') || '' };
+            const jsonStr = JSON.stringify(dataObj, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `copia_seguridad_refuerzo_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function triggerImportJSON() {
+            document.getElementById('import-file-input').click();
+        }
+
+        function importJSON(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const imported = JSON.parse(evt.target.result);
+                    if (imported.students && imported.schedule && imported.sessions) {
+                        students = imported.students;
+                        schedule = imported.schedule;
+                        sessions = imported.sessions;
+                        daySeparators = imported.daySeparators || [];
+                        if (imported.theme) {
+                            document.body.className = imported.theme;
+                            localStorage.setItem('refuerzo_theme', imported.theme);
+                        }
+                        saveData();
+                        renderStudents();
+                        renderSchedule();
+                        renderSessions();
+                        populateStudentSelects();
+                        alert('¡Copia de seguridad importada con éxito!');
+                    } else {
+                        alert('El archivo cargado no contiene un formato de datos válido.');
+                    }
+                } catch(err) {
+                    alert('Error al leer el archivo JSON.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        /* --- ALUMNADO --- */
+        function getRefuerzoHTML(s) {
+            let items = [];
+            if(s.refuerzoLengua) {
+                items.push(`<div><span class="badge badge-lengua">Lengua</span> ${s.motivoLengua ? `<small>(${s.motivoLengua})</small>` : ''}</div>`);
+            }
+            if(s.refuerzoMates) {
+                items.push(`<div><span class="badge badge-mates">Mates</span> ${s.motivoMates ? `<small>(${s.motivoMates})</small>` : ''}</div>`);
+            }
+            if(items.length === 0) return '-';
+            return `<div class="badge-container-stacked">${items.join('')}</div>`;
+        }
+
+        function renderStudents() {
+            const tbody = document.getElementById('students-body');
+            tbody.innerHTML = '';
+            
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888;">No hay alumnos añadidos. Pulsa en "Añadir Alumno/a" para empezar a registrar.</td></tr>';
+                return;
+            }
+
+            students.forEach(s => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td><span class="badge badge-lengua">${s.course}</span></td>
+                        <td>${getRefuerzoHTML(s)}</td>
+                        <td>
+                            ${s.atendidoPT ? '<span class="badge badge-pt">PT</span> ' : ''}
+                            ${s.atendidoAL ? '<span class="badge badge-al">AL</span>' : ''}
+                            ${!s.atendidoPT && !s.atendidoAL ? '-' : ''}
+                        </td>
+                        <td><small>${s.obs || '-'}</small></td>
+                        <td>
+                            <div class="action-buttons-cell">
+                                <button class="btn btn-warning" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function filterStudents() {
+            const nameQuery = document.getElementById('search-student').value.toLowerCase();
+            const courseQuery = document.getElementById('filter-course').value;
+
+            const filtered = students.filter(s => {
+                const matchName = s.name.toLowerCase().includes(nameQuery);
+                const matchCourse = courseQuery === "" || s.course === courseQuery;
+                return matchName && matchCourse;
+            });
+
+            const tbody = document.getElementById('students-body');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888;">No se encontraron resultados.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(s => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td><span class="badge badge-lengua">${s.course}</span></td>
+                        <td>${getRefuerzoHTML(s)}</td>
+                        <td>
+                            ${s.atendidoPT ? '<span class="badge badge-pt">PT</span> ' : ''}
+                            ${s.atendidoAL ? '<span class="badge badge-al">AL</span>' : ''}
+                            ${!s.atendidoPT && !s.atendidoAL ? '-' : ''}
+                        </td>
+                        <td><small>${s.obs || '-'}</small></td>
+                        <td>
+                            <div class="action-buttons-cell">
+                                <button class="btn btn-warning" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger" onclick="deleteStudent('${s.id}')"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openStudentModal() {
+            document.getElementById('student-form').reset();
+            document.getElementById('student-id').value = '';
+            document.getElementById('modal-student-title').innerText = "Añadir Alumno/a";
+            document.getElementById('student-modal').style.display = 'flex';
+        }
+
+        function editStudent(id) {
+            const s = students.find(item => item.id === id);
+            if(s) {
+                document.getElementById('student-id').value = s.id;
+                document.getElementById('student-name').value = s.name;
+                document.getElementById('student-course').value = s.course;
+                document.getElementById('student-refuerzo-lengua').checked = !!s.refuerzoLengua;
+                document.getElementById('student-motivo-lengua').value = s.motivoLengua || '';
+                document.getElementById('student-refuerzo-mates').checked = !!s.refuerzoMates;
+                document.getElementById('student-motivo-mates').value = s.motivoMates || '';
+                document.getElementById('student-atendido-pt').checked = !!s.atendidoPT;
+                document.getElementById('student-atendido-al').checked = !!s.atendidoAL;
+                document.getElementById('student-obs').value = s.obs || '';
+                
+                document.getElementById('modal-student-title').innerText = "Editar Alumno/a";
+                document.getElementById('student-modal').style.display = 'flex';
+            }
+        }
+
+        function saveStudent(e) {
+            e.preventDefault();
+            const id = document.getElementById('student-id').value || Date.now().toString();
+            const name = document.getElementById('student-name').value;
+            const course = document.getElementById('student-course').value;
+            const refuerzoLengua = document.getElementById('student-refuerzo-lengua').checked;
+            const motivoLengua = document.getElementById('student-motivo-lengua').value;
+            const refuerzoMates = document.getElementById('student-refuerzo-mates').checked;
+            const motivoMates = document.getElementById('student-motivo-mates').value;
+            const atendidoPT = document.getElementById('student-atendido-pt').checked;
+            const atendidoAL = document.getElementById('student-atendido-al').checked;
+            const obs = document.getElementById('student-obs').value;
+
+            const index = students.findIndex(s => s.id === id);
+            const studentObj = { 
+                id, name, course, refuerzoLengua, motivoLengua, refuerzoMates, motivoMates, atendidoPT, atendidoAL, obs 
+            };
+
+            if(index > -1) {
+                students[index] = studentObj;
+            } else {
+                students.push(studentObj);
+            }
+
+            saveData();
+            renderStudents();
+            populateStudentSelects();
+            closeModal('student-modal');
+        }
+
+        function deleteStudent(id) {
+            if(confirm('¿Deseas eliminar este registro de alumno?')) {
+                students = students.filter(s => s.id !== id);
+                saveData();
+                renderStudents();
+                populateStudentSelects();
+            }
+        }
+
+        /* --- HORARIO --- */
+        function renderSchedule() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '<div></div>';
+            
+            days.forEach(day => {
+                container.innerHTML += `<div class="schedule-header">${day}</div>`;
+            });
+
+            timeslots.forEach(slot => {
+                container.innerHTML += `<div class="schedule-header" style="background:var(--primary);">${slot}</div>`;
+                days.forEach(day => {
+                    const assigned = (schedule[slot] && schedule[slot][day]) ? schedule[slot][day] : (slot === "11:00–11:30" ? "RECREO" : "");
+                    const isRecreo = assigned === "RECREO";
+                    
+                    container.innerHTML += `
+                        <div class="schedule-cell ${isRecreo ? 'recreo-cell' : ''}" onclick="openScheduleModal('${slot}', '${day}')">
+                            ${assigned ? `<div class="schedule-tag ${isRecreo ? 'recreo' : ''}">${assigned}</div>` : '<small style="color:#cbd5e1;">-</small>'}
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function openScheduleModal(slot, day) {
+            currentEditingSlot = slot;
+            currentEditingDay = day;
+            selectedSubject = '';
+            const currentVal = (schedule[slot] && schedule[slot][day]) ? schedule[slot][day] : (slot === "11:00–11:30" ? "RECREO" : "");
+            
+            document.getElementById('schedule-modal-info').innerText = `${day} (${slot})`;
+            document.getElementById('schedule-input-val').value = currentVal;
+            document.getElementById('schedule-modal').style.display = 'flex';
+        }
+
+        function setSubjectValue(subj) {
+            selectedSubject = subj;
+            const currentInput = document.getElementById('schedule-input-val').value.trim();
+            
+            if (currentInput && !currentInput.includes(subj) && currentInput !== 'RECREO') {
+                const parts = currentInput.split(' - ');
+                const coursePart = parts.length > 1 ? parts[1] : parts[0];
+                document.getElementById('schedule-input-val').value = `${subj} - ${coursePart}`;
+            } else {
+                document.getElementById('schedule-input-val').value = subj;
+            }
+        }
+
+        function setCourseValue(course) {
+            const currentInput = document.getElementById('schedule-input-val').value.trim();
+            
+            if (selectedSubject) {
+                document.getElementById('schedule-input-val').value = `${selectedSubject} - ${course}`;
+            } else if (currentInput.includes(' - ')) {
+                const subjPart = currentInput.split(' - ')[0];
+                document.getElementById('schedule-input-val').value = `${subjPart} - ${course}`;
+            } else if (currentInput === 'Lengua' || currentInput === 'Matemáticas' || currentInput === 'Clase Lectiva') {
+                document.getElementById('schedule-input-val').value = `${currentInput} - ${course}`;
+            } else {
+                document.getElementById('schedule-input-val').value = course;
+            }
+        }
+
+        function saveScheduleCell() {
+            const val = document.getElementById('schedule-input-val').value.trim();
+            if(!schedule[currentEditingSlot]) schedule[currentEditingSlot] = {};
+            
+            if(val) {
+                schedule[currentEditingSlot][currentEditingDay] = val;
+            } else {
+                delete schedule[currentEditingSlot][currentEditingDay];
+            }
+            
+            saveData();
+            renderSchedule();
+            closeModal('schedule-modal');
+        }
+
+        function clearScheduleCell() {
+            if(schedule[currentEditingSlot] && schedule[currentEditingSlot][currentEditingDay]) {
+                delete schedule[currentEditingSlot][currentEditingDay];
+                saveData();
+                renderSchedule();
+            }
+            closeModal('schedule-modal');
+        }
+
+        function resetEmptySchedule() {
+            if(confirm('¿Deseas limpiar todas las celdas del horario excepto las del RECREO?')) {
+                schedule = JSON.parse(JSON.stringify(emptySchedule));
+                saveData();
+                renderSchedule();
+            }
+        }
+
+        /* --- DIARIO DE SESIONES & SEPARADORES --- */
+        function openDayModal() {
+            document.getElementById('day-separator-date').valueAsDate = new Date();
+            document.getElementById('day-modal').style.display = 'flex';
+        }
+
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+        }
+
+        function formatDateFormatted(dateStr) {
+            if(!dateStr) return '';
+            const d = new Date(dateStr + 'T00:00:00');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            let formatted = d.toLocaleDateString('es-ES', options);
+            return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        }
+
+        function saveDaySeparator() {
+            const rawDate = document.getElementById('day-separator-date').value;
+            if(!rawDate) return;
+
+            const exists = daySeparators.some(sep => sep.date === rawDate);
+            if (!exists) {
+                const dayObj = {
+                    id: Date.now().toString(),
+                    date: rawDate,
+                    formattedText: formatDateFormatted(rawDate)
+                };
+                daySeparators.push(dayObj);
+                saveData();
+            }
+            
+            renderSessions();
+            closeModal('day-modal');
+        }
+
+        function deleteDaySeparator(id) {
+            if(confirm('¿Deseas eliminar este separador de día?')) {
+                daySeparators = daySeparators.filter(sep => sep.id !== id);
+                saveData();
+                renderSessions();
+            }
+        }
+
+        function openSessionModal() {
+            document.getElementById('session-form').reset();
+            document.getElementById('session-id').value = '';
+            document.getElementById('session-time-slot').value = '';
+            document.getElementById('modal-session-title').innerText = "Registrar Sesión de Refuerzo";
+            document.getElementById('session-date').valueAsDate = new Date();
+            document.getElementById('session-learning-select').innerHTML = '<option value="">- Selec -</option>';
+            document.getElementById('session-other-group').style.display = 'none';
+            document.getElementById('session-modal').style.display = 'flex';
+        }
+
+        function onAreaChange(area, selectedLearningVal = '') {
+            const select = document.getElementById('session-learning-select');
+            select.innerHTML = '<option value="">- Selec -</option>';
+            
+            const opciones = area === 'Lengua' ? opcionesLengua : opcionesMates;
+            let found = false;
+
+            opciones.forEach(opt => {
+                const isSelected = (opt === selectedLearningVal);
+                if (isSelected) found = true;
+                select.innerHTML += `<option value="${opt}" ${isSelected ? 'selected' : ''}>${opt}</option>`;
+            });
+
+            if (selectedLearningVal && !found) {
+                select.value = 'Otros';
+                document.getElementById('session-other-group').style.display = 'block';
+                document.getElementById('session-other-input').value = selectedLearningVal;
+                document.getElementById('session-other-input').required = true;
+            } else if (select.value === 'Otros') {
+                document.getElementById('session-other-group').style.display = 'block';
+                document.getElementById('session-other-input').required = true;
+            } else {
+                document.getElementById('session-other-group').style.display = 'none';
+                document.getElementById('session-other-input').value = '';
+                document.getElementById('session-other-input').required = false;
+            }
+        }
+
+        function onLearningChange() {
+            const val = document.getElementById('session-learning-select').value;
+            const otherGroup = document.getElementById('session-other-group');
+            if (val === 'Otros') {
+                otherGroup.style.display = 'block';
+                document.getElementById('session-other-input').required = true;
+            } else {
+                otherGroup.style.display = 'none';
+                document.getElementById('session-other-input').required = false;
+            }
+        }
+
+        function appendObsTag(text) {
+            const textarea = document.getElementById('session-obs');
+            if (textarea.value.trim() === '') {
+                textarea.value = text;
+            } else {
+                textarea.value = textarea.value.trim() + ' ' + text;
+            }
+        }
+
+        function editSession(id) {
+            const sess = sessions.find(s => s.id === id);
+            if(sess) {
+                document.getElementById('session-id').value = sess.id;
+                document.getElementById('session-date').value = sess.date;
+                document.getElementById('session-student-id').value = sess.studentId;
+                document.getElementById('session-time-slot').value = sess.timeSlot || '';
+                
+                if(sess.area === 'Lengua') {
+                    document.getElementById('session-area-lengua').checked = true;
+                } else {
+                    document.getElementById('session-area-mates').checked = true;
+                }
+
+                onAreaChange(sess.area, sess.content);
+
+                document.getElementById('session-attitude').value = sess.attitude || sess.achievement || '';
+                document.getElementById('session-obs').value = sess.obs || '';
+
+                document.getElementById('modal-session-title').innerText = "Editar Sesión de Refuerzo";
+                document.getElementById('session-modal').style.display = 'flex';
+            }
+        }
+
+        function deleteSession(id) {
+            if(confirm('¿Deseas eliminar este registro de sesión?')) {
+                sessions = sessions.filter(s => s.id !== id);
+                saveData();
+                renderSessions();
+            }
+        }
+
+        function saveSession(e) {
+            e.preventDefault();
+            const id = document.getElementById('session-id').value || Date.now().toString();
+            const studentId = document.getElementById('session-student-id').value;
+            const student = students.find(s => s.id === studentId);
+            const sessionDate = document.getElementById('session-date').value;
+            const timeSlot = document.getElementById('session-time-slot').value;
+            
+            const areaRadios = document.getElementsByName('session-area-radio');
+            let selectedArea = '';
+            for(const r of areaRadios) {
+                if(r.checked) { selectedArea = r.value; break; }
+            }
+
+            const learningVal = document.getElementById('session-learning-select').value;
+            let finalLearning = learningVal;
+            if (learningVal === 'Otros') {
+                finalLearning = document.getElementById('session-other-input').value.trim() || 'Otros';
+            }
+
+            const attitudeVal = document.getElementById('session-attitude').value;
+
+            const sessionObj = {
+                id: id,
+                date: sessionDate,
+                timeSlot: timeSlot,
+                studentId: studentId,
+                studentName: student ? student.name : '',
+                course: student ? student.course : '',
+                area: selectedArea,
+                content: finalLearning,
+                attitude: attitudeVal,
+                obs: document.getElementById('session-obs').value
+            };
+
+            const index = sessions.findIndex(s => s.id === id);
+            if(index > -1) {
+                sessions[index] = sessionObj;
+            } else {
+                sessions.push(sessionObj);
+            }
+
+            // Asegurar que exista un separador de día para la fecha de la sesión guardada
+            if (!daySeparators.some(sep => sep.date === sessionDate)) {
+                daySeparators.push({
+                    id: Date.now().toString(),
+                    date: sessionDate,
+                    formattedText: formatDateFormatted(sessionDate)
+                });
+            }
+
+            saveData();
+            renderSessions();
+            closeModal('session-modal');
+        }
+
+        function filterTodaySessions() {
+            isTodayFilterActive = true;
+            document.getElementById('session-filter-indicator').style.display = 'flex';
+            renderSessions();
+        }
+
+        function clearSessionFilter() {
+            isTodayFilterActive = false;
+            document.getElementById('session-filter-indicator').style.display = 'none';
+            renderSessions();
+        }
+
+        function renderSessions() {
+            const tbody = document.getElementById('sessions-body');
+            tbody.innerHTML = '';
+
+            const todayStr = new Date().toISOString().slice(0, 10);
+
+            // Recopilar todas las fechas únicas de separadores y sesiones
+            let allDatesSet = new Set([
+                ...daySeparators.map(d => d.date),
+                ...sessions.map(s => s.date)
+            ]);
+
+            let sortedDates = Array.from(allDatesSet).sort();
+
+            if (isTodayFilterActive) {
+                sortedDates = sortedDates.filter(d => d === todayStr);
+            }
+
+            if (sortedDates.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#888;">No hay sesiones ni días registrados.</td></tr>';
+                return;
+            }
+
+            sortedDates.forEach(dateStr => {
+                const sep = daySeparators.find(d => d.date === dateStr);
+                const daySessions = sessions.filter(s => s.date === dateStr);
+                const d = new Date(dateStr + 'T00:00:00');
+                const weekNum = getWeekNumber(d);
+                const weekColorClass = `day-sep-week-${weekNum % 4}`;
+                const formattedTitle = sep ? sep.formattedText : formatDateFormatted(dateStr);
+                const sepId = sep ? sep.id : null;
+
+                // 1. Renderizar la fila de Encabezado de Día
+                tbody.innerHTML += `
+                    <tr class="day-separator-row ${weekColorClass}">
+                        <td colspan="7">
+                            <i class="fas fa-calendar-day" style="margin-right: 8px;"></i> ${formattedTitle}
+                        </td>
+                        <td>
+                            ${sepId ? `<button class="btn btn-danger" style="padding: 4px 10px; font-size: 0.8rem;" onclick="deleteDaySeparator('${sepId}')"><i class="fas fa-trash"></i></button>` : ''}
+                        </td>
+                    </tr>
+                `;
+
+                // 2. Renderizar las sesiones que pertenecen a esta fecha
+                if (daySessions.length === 0) {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td colspan="8" style="text-align:center; color:#94a3b8; font-style: italic; padding: 10px;">
+                                Sin registros de sesiones para este día.
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    daySessions.forEach(s => {
+                        const attitudeDisplay = s.attitude || s.achievement || '-';
+                        const timeSlotDisplay = s.timeSlot ? `<span class="slot-subtext">${s.timeSlot}</span>` : '';
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="date-cell">${s.date}</td>
+                                <td><strong>${s.studentName}</strong></td>
+                                <td>
+                                    <strong>${s.course}</strong>
+                                    ${timeSlotDisplay}
+                                </td>
+                                <td><span class="badge ${s.area === 'Lengua' ? 'badge-lengua' : 'badge-mates'}">${s.area}</span></td>
+                                <td>${s.content}</td>
+                                <td><small>${attitudeDisplay}</small></td>
+                                <td><small>${s.obs || '-'}</small></td>
+                                <td>
+                                    <div class="action-buttons-cell">
+                                        <button class="btn btn-warning" onclick="editSession('${s.id}')"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-danger" onclick="deleteSession('${s.id}')"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+        }
+
+        function populateStudentSelects() {
+            const selectSession = document.getElementById('session-student-id');
+            
+            selectSession.innerHTML = '';
+
+            if (students.length === 0) {
+                selectSession.innerHTML = '<option value="">No hay alumnos guardados</option>';
+                return;
+            }
+
+            students.forEach(s => {
+                selectSession.innerHTML += `<option value="${s.id}">${s.name} (${s.course})</option>`;
+            });
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
